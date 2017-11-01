@@ -1,0 +1,4 @@
+# Target dirs
+target/
+**/target/
+nbactions.xml
