@@ -32,7 +32,7 @@ public class FileProcessor {
     }
 
     public void unzipArchive(String archiveName) throws IOException {
-        File archiveFile = new File(this.folderPath + archiveName);
+        File archiveFile = new File(this.folderPath + File.separator + archiveName);
         if (archiveFile.exists() && archiveFile.isFile()) {
             Logger.getLogger(FileProcessor.class.getName()).log(Level.INFO, "Unzipping " + archiveName);
             UnzipUtility unzipUtil = new UnzipUtility(this.folderPath);
@@ -50,7 +50,7 @@ public class FileProcessor {
 
         AccessLogParser accessLogParser = new AccessLogParser();
         for (String filename : accessLogParser.getFilenameArrays()) {
-            File accFile = new File(folderPath + filename);
+            File accFile = new File(folderPath + File.separator + filename);
             if (accFile.exists()) {
                 accessLogParser.setAccessFile(accFile);
                 Logger.getLogger(FileProcessor.class.getName()).log(Level.INFO, "Processing " + accFile.getName());
@@ -69,7 +69,7 @@ public class FileProcessor {
 
         ErrorLogParser ep = new ErrorLogParser();
         for (String filename : ep.getFilenameArrays()) {
-            File errFile = new File(folderPath + filename);
+            File errFile = new File(folderPath + File.separator + filename);
             if (errFile.exists()) {
                 ep.setErrorFile(errFile);
                 Logger.getLogger(FileProcessor.class.getName()).log(Level.INFO, "Processing " + errFile.getName());
