@@ -6,6 +6,8 @@
 package com.mirobarsa.analytic.downloader;
 
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -16,6 +18,8 @@ import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.mirobarsa.analytic.FileProcessor;
 
 /**
  *
@@ -37,22 +41,22 @@ public class DownloadData {
 
         browser = new ChromeDriver(cap);
         browser.get(cred.getHomepage());
-        WebElement username = browser.findElement(By.xpath("//input[@id='usernamefield']"));
-        username.findElement(By.xpath("//input[@id='usernamefield']")).sendKeys(cred.getUsername());
-        WebElement password = browser.findElement(By.xpath("//input[@id='passwordfield']"));
-        password.findElement(By.xpath("//input[@id='passwordfield']")).sendKeys(cred.getPassword());
-        WebElement enter = browser.findElement(By.cssSelector("#login_block > input[type=\"submit\"]"));
-        enter.click();
+        browser.findElement(By.xpath("//input[@id='usernamefield']")).sendKeys(cred.getUsername());
+        browser.findElement(By.xpath("//input[@id='passwordfield']")).sendKeys(cred.getPassword());
+        browser.findElement(By.cssSelector("#login_block > input[type=\"submit\"]")).click();
         browser.get(cred.getHomepage() + "/client/index.php?page=logs");
         WebElement allLog = browser.findElement(By.xpath("//a[@id='log_download']"));
-        allLog.click();
-        WebDriverWait wait = new WebDriverWait(browser, 20);
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#progresswindow > div.buttons > button:nth-child(1)")));
-        WebElement downloadLog = browser.findElement(By.cssSelector("#progresswindow > div.buttons > button:nth-child(1)"));
-        downloadLog.click();
-
-        Thread.sleep(10000);
-
+        Boolean isPresent = browser.findElements(By.xpath("//a[@id='log_download']")).size() > 0;
+        if (isPresent) {
+            allLog.click();
+            WebDriverWait wait = new WebDriverWait(browser, 20);
+            wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#progresswindow > div.buttons > button:nth-child(1)")));
+            WebElement downloadLog = browser.findElement(By.cssSelector("#progresswindow > div.buttons > button:nth-child(1)"));
+            downloadLog.click();
+            Thread.sleep(10000);
+        } else {
+            Logger.getLogger(FileProcessor.class.getName()).log(Level.SEVERE, "Unable to locate element: //a[@id='log_download']");
+        }
         browser.close();
         browser.quit();
     }
