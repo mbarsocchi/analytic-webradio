@@ -91,7 +91,7 @@ public class AccessLogParser {
                         accessArray.add(new AdditionalMetadata(parsedDate, ip, refer, userAgent, secondOfListening));
                     }
                 } else {
-                    break;
+                    continue;
                 }
 
             }
