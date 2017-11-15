@@ -64,7 +64,7 @@ public class ErrorLogParser {
                     int actualListner = Integer.parseInt(m.group(2));
                     listnerArray.add(new HistoricListner(parsedDate, actualListner));
                 } else {
-                    break;
+                    continue;
                 }
 
             }
