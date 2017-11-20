@@ -60,9 +60,16 @@ public class DownloadData {
     }
 
     private void enterArea(String url, String username, String password) {
+        String passwordField = "//input[@id='passwordfield']";
+
         browser.get(url);
         browser.findElement(By.xpath("//input[@id='usernamefield']")).sendKeys(username);
-        browser.findElement(By.xpath("//input[@id='passwordfield']")).sendKeys(password);
+        Wait wait = new FluentWait(browser)
+                .withTimeout(30, SECONDS)
+                .pollingEvery(5, SECONDS)
+                .ignoring(NoSuchElementException.class);
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(passwordField)));
+        browser.findElement(By.xpath(passwordField)).sendKeys(password);
         browser.findElement(By.cssSelector("#login_block > input[type=\"submit\"]")).click();
     }
 
