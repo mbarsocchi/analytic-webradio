@@ -69,8 +69,10 @@ public class DownloadData {
                 .pollingEvery(5, SECONDS)
                 .ignoring(NoSuchElementException.class);
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath(passwordField)));
+        browser.findElement(By.xpath(passwordField)).click();
         browser.findElement(By.xpath(passwordField)).sendKeys(password);
         browser.findElement(By.cssSelector("#login_block > input[type=\"submit\"]")).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#navigation-content")));
     }
 
     private void DownloadReport(String startpage) throws InterruptedException, IOException {
