@@ -78,6 +78,8 @@ public class DownloadData {
         } catch (NoSuchElementException e) {
             takeScreenshot();
             Logger.getLogger(FileProcessor.class.getName()).log(Level.SEVERE, e.getMessage());
+            browser.close();
+            browser.quit();
         }
     }
 
@@ -101,6 +103,8 @@ public class DownloadData {
         } catch (NoSuchElementException e) {
             takeScreenshot();
             Logger.getLogger(FileProcessor.class.getName()).log(Level.SEVERE, e.getMessage());
+            browser.close();
+            browser.quit();
         }
 
     }
