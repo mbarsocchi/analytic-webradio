@@ -47,6 +47,7 @@ public class DownloadData {
         chromePrefs.put("download.default_directory", downloadFilepath);
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("prefs", chromePrefs);
+        options.addArguments("--start-maximized");
         DesiredCapabilities cap = DesiredCapabilities.chrome();
         cap.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
         cap.setCapability(ChromeOptions.CAPABILITY, options);
@@ -83,7 +84,7 @@ public class DownloadData {
         }
     }
 
-    private void DownloadReport(String startpage) throws InterruptedException, IOException {
+    private void DownloadReport(String startpage) throws InterruptedException {
         String logXpath = "//a[@id='log_download']";
         String downloadButton = "#progresswindow > div.buttons > button:nth-child(1)";
 
@@ -109,9 +110,15 @@ public class DownloadData {
 
     }
 
-    private void takeScreenshot() throws IOException {
+    private void takeScreenshot() {
         File scrFile = ((TakesScreenshot) browser).getScreenshotAs(OutputType.FILE);
         String ts = new SimpleDateFormat("yyyyMMdd-HHmmss").format(new java.util.Date());
-        FileUtils.copyFile(scrFile, new File(this.folderPath + ts + ".png"));
+        String path = this.folderPath + File.separator + ts + ".png";
+        Logger.getLogger(FileProcessor.class.getName()).log(Level.SEVERE, "Save screenshot " + path);
+        try {
+            FileUtils.copyFile(scrFile, new File(path));
+        } catch (IOException ex) {
+            Logger.getLogger(DownloadData.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
