@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -58,7 +59,7 @@ public class AccessLogParser {
 
     public void parseFile(Connection conn) throws IOException, SQLException {
         String readLine = "";
-        DateFormat df = new SimpleDateFormat("dd/MMM/yyyy:kk:mm:ss Z");
+        DateFormat df = new SimpleDateFormat("dd/MMM/yyyy:kk:mm:ss Z", Locale.US);
         parsedLines = 0;
         Date latestEntry = getlatestEntry(conn);
         latestEntry = latestEntry == null ? new Date(0) : latestEntry;
