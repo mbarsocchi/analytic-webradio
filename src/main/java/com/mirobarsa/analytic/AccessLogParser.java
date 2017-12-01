@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,9 +56,9 @@ public class AccessLogParser {
         return filenameArrays;
     }
 
-    public void parseFile(Connection conn) throws IOException, ParseException, SQLException {
+    public void parseFile(Connection conn) throws IOException, SQLException {
         String readLine = "";
-        DateFormat df = new SimpleDateFormat("dd/MMM/yyyy:kk:mm:ss z");
+        DateFormat df = new SimpleDateFormat("dd/MMM/yyyy:kk:mm:ss Z");
         parsedLines = 0;
         Date latestEntry = getlatestEntry(conn);
         latestEntry = latestEntry == null ? new Date(0) : latestEntry;
@@ -65,8 +67,13 @@ public class AccessLogParser {
         while ((readLine = a.readLine()) != null) {
             Matcher m = p.matcher(readLine);
             if (m.find()) {
-                Date parsedDate = df.parse(m.group(2));
-                if (parsedDate.after(latestEntry)) {
+                Date parsedDate = null;
+                try {
+                    parsedDate = df.parse(m.group(2));
+                } catch (ParseException ex) {
+                    Logger.getLogger(AccessLogParser.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if (parsedDate != null && parsedDate.after(latestEntry)) {
                     String ip = m.group(1);
                     String refer = m.group(3);
                     String userAgent = m.group(4);

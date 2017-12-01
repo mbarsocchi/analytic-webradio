@@ -60,23 +60,25 @@ public class DownloadData {
         browser.quit();
     }
 
-    private void enterArea(String url, String username, String password) throws IOException {
+    private void enterArea(String url, String username, String password) throws IOException, InterruptedException {
         String passwordField = "//input[@id='passwordfield']";
-
-        browser.get(url);
-        browser.findElement(By.xpath("//input[@id='usernamefield']")).sendKeys(username);
+        String usernameField = "//input[@id='usernamefield']";
         Wait wait = new FluentWait(browser)
                 .withTimeout(30, SECONDS)
                 .pollingEvery(5, SECONDS)
                 .ignoring(NoSuchElementException.class);
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(passwordField)));
-        browser.findElement(By.xpath(passwordField)).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(passwordField)));
-        browser.findElement(By.xpath(passwordField)).sendKeys(password);
-        browser.findElement(By.cssSelector("#login_block > input[type=\"submit\"]")).click();
+
+        browser.get(url);
         try {
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath(usernameField)));
+            browser.findElement(By.xpath(usernameField)).sendKeys(username);
+            Thread.sleep(2000);
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath(passwordField)));
+            browser.findElement(By.xpath(passwordField)).sendKeys(password);
+            Thread.sleep(2000);
+            browser.findElement(By.cssSelector("#login_block > input[type=\"submit\"]")).click();
             wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#navigation-content")));
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchElementException | org.openqa.selenium.TimeoutException e) {
             takeScreenshot();
             Logger.getLogger(FileProcessor.class.getName()).log(Level.SEVERE, e.getMessage());
             browser.close();
@@ -101,7 +103,7 @@ public class DownloadData {
             WebElement downloadLog = browser.findElement(By.cssSelector(downloadButton));
             downloadLog.click();
             Thread.sleep(10000);
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchElementException | org.openqa.selenium.TimeoutException e) {
             takeScreenshot();
             Logger.getLogger(FileProcessor.class.getName()).log(Level.SEVERE, e.getMessage());
             browser.close();
