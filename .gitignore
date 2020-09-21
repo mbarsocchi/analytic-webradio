@@ -3,3 +3,4 @@ target/
 **/target/
 src/test/resources/processed/**
 nbactions.xml
+*.DS_Store
